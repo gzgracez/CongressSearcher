@@ -1,0 +1,41 @@
+<% include header %>
+  <% if(messages.notification){ %>
+    <% if(messages.notification == "Could not log in - username or password was incorrect"){ %>
+      <div class="alert alert-danger" id="placeholderWarning" role="alert">
+        <p class="nameAlert"><span><%= messages.notification %>&nbsp;</span><a href="#" class="close nameAlert" data-dismiss="alert" data-hide="alert">&times;</a></p>
+      </div>
+    <% } else {%>
+      <div class="alert alert-success" id="placeholderSuccess" role="alert">
+        <p class="nameAlert"><span><%= messages.notification %>&nbsp;</span><a href="#" class="close nameAlert" data-dismiss="alert" data-hide="alert">&times;</a></p>
+      </div>
+    <% } %>
+  <% } %>
+  
+  <% if(session.user == null){ %>
+    <form method="post" action="/login">
+      <div class="form-group">
+        <label for="name">Username:</label>
+        <input type="text" id="lusername" name="lUser[username]" placeholder="Username" class="form-control"><br>
+        <label for="name">Password:</label>
+        <input type="password" id="lpassword" name="lUser[password]" placeholder="Password" class="form-control"><br>
+        <input class="btn btn-primary" class="form-control" type="submit" id="login"value="Login">
+      </div>
+    </form>
+    <br>
+    <p>Register <a href="/register" class="href">here</a> for an account if you do not have one already!</p>
+
+  <% } else if (session.user.userType == "admin") { %>
+    <h2>Welcome, <%= session.user.firstName %> <%= session.user.lastName %>!</h2>
+    <p>Click <a href="/allusers">here</a> to view all users.</p>
+    <p>Click <a href="/dashboard">here</a> to view your dashboard.</p>
+    <p>Click <a href="/createclub">here</a> to create a new club.</p>
+
+  <% } else if (session.user.userType == "advisor") { %>
+    <h2>Welcome, <%= session.user.firstName%> <%= session.user.lastName%>!</h2>
+    <p>Click <a href="/dashboard">here</a> to view your dashboard.</p>
+    <!-- <p>Click <a href="/allusers">here</a> to view all users.</p> -->
+  <% } else { %>
+    <h2>Welcome, <%= session.user.firstName%> <%= session.user.lastName%>!</h2>
+    <p>Click <a href="/dashboard">here</a> to view your dashboard.</p>
+  <% } %>
+<% include footer %>

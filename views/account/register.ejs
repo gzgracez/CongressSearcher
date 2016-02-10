@@ -1,0 +1,29 @@
+<% include ../header %>
+  
+
+<% if(messages.notification){ %>
+  <div class="alert alert-danger" id="placeholderWarning" role="alert">
+    <p class="nameAlert"><span><%= messages.notification %>&nbsp;</span><a href="#" class="close nameAlert" data-dismiss="alert" data-hide="alert">&times;</a></p>
+  </div>
+<% } %>
+
+ <form method="post" action="/register">
+    <label for="email">Email:</label>
+  <input type="email" name="rUser[email]" value="" placeholder="Email" class="form-control" required><br>
+
+  <label for="firstName">First Name:</label>
+  <input type="text" name="rUser[firstName]" value="" placeholder="FirstName" class="form-control" required><br>
+
+  <label for="lastName">Last Name:</label>
+  <input type="text" name="rUser[lastName]" value="" placeholder="LastName" class="form-control" required><br>
+
+  <label for="username">Username:</label>
+  <input type="text" name="rUser[username]" value="" placeholder="Username" class="form-control" required><br>
+
+  <label for="password">Password:</label>
+  <input type="password" name="rUser[password]" value="" placeholder="Password" class="form-control" required><br>
+
+  <input class="btn btn-primary" class="form-control" type="submit" value="Register"><br><br>
+</form>
+
+<% include ../footer %>

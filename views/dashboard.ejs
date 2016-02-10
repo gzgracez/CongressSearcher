@@ -1,0 +1,12 @@
+<% include header %>
+
+<h2>Welcome, <%= session.user.firstName%> <%= session.user.lastName%>!</h2>
+
+<p>Dashboard info - legislators and bills you are following</p>
+<ul>
+  <li>Legislators table with IDs</li>
+  <li>Bills table with IDs</li>
+  <li>Users table with legislator and bill IDs</li>
+</ul>
+
+<% include footer %>

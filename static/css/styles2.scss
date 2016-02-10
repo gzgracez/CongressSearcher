@@ -1,0 +1,240 @@
+@import "bootstrap";
+// @import "bootstrap-material-design";
+$body-font: "Trebuchet MS", Helvetica, sans-serif;
+$navy: #000084;
+$lighterNavy: #0000d3;
+$yellow: #dcdd63;
+$gray: #F8F8F8;
+$green: #1f6300;
+$navBackgroundColor: #FFE4C4;
+$navHoverGray: #777;
+$navTextBlack: #000;
+$red: red;
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 0;
+  top:0;
+}
+
+body, nav {
+  font-family: $body-font;
+  color: $navy;
+  background-color: $gray;
+}
+
+body {
+  a {
+    text-decoration: underline;
+  }
+}
+
+body {
+  font-size: 24px;
+}
+
+table {
+  font-size: 24px;
+}
+
+.nameAlert{
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.alert {
+   display: inline-block;    
+}
+
+#nameForm {
+  margin-top: 20px;
+}
+
+#home, #backHome, #nextQuestion, #previousQuestion {
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.btn {
+  font-size: 16px;
+}
+
+.questionNum {
+  text-align: left;
+}
+
+h1{
+  font-weight: 600;
+  text-align: center;
+}
+
+h3 {
+  font-weight: 600;
+}
+
+#ajaxloading {
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+#question {
+  font-weight: 500;
+}
+
+#nameFormWarning, #answerWarning, #placeholderWarning {
+  font-weight: 300;
+  color: $red;
+}
+
+nav {
+  a {
+    text-decoration: none;
+  }
+  .navbar-fixed-top {
+    background-color:#FFE4C4;
+  }
+}
+
+.navbar-default {
+  background-color:$navBackgroundColor;
+  .navbar-toggle {
+      border-color: #729de1;
+      :focus, :hover {
+        background-color: #d1efff;
+      }
+  }
+}
+
+
+.navbar-default .navbar-nav>li>a {
+    color:$navTextBlack;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+    color:$navHoverGray;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus {
+    color: $navTextBlack;
+}
+
+.navbar-default .navbar-nav>.active>a:hover {
+    color: $navHoverGray;
+}
+
+p, a, li, label{
+  font-size: 24px;
+}
+
+form{
+  label{
+    display: inline-block;
+    float:left;
+  }
+}
+
+label#ansLabels {
+  float: inherit;
+  font-weight: 300;
+}
+
+.notice{
+  font-size: 16px;
+  color: $green;
+}
+
+.error{
+  font-size: 18px;
+  color: $red;
+}
+
+.bodyText{
+  padding-top: 70px;
+  height: 100%;
+}
+
+.container {
+  height: 80%;
+}
+
+.icon-bar{
+  background-color: $navy;
+}
+
+.answerLabel {
+  font-size: 18px;
+  font-weight: 500;
+  padding-right: 10px; 
+}
+
+.editanswers{
+  width: 94%;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  display: inline;
+}
+
+.editQuizAddAns {
+  margin-right: 5px;
+}
+
+.removeQuestion {
+  margin-left: 5px;
+}
+
+.btn {
+  margin-bottom: 5px;
+}
+
+#description{
+  text-align: center;
+  font-weight: 300;
+}
+
+.customNotifications {
+  position: fixed;
+  right: 0px;
+  width: 50%;
+  top: 5%; 
+  div {
+    margin-bottom: 5px;
+    margin-right: 5%;
+    float: right;
+  }
+}
+
+#homeImg {
+  display: inline;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+.allclubs{
+  font-size: 28px;
+}
+
+.navbar-default {
+  p, a, li, label {
+    font-size: 20px;
+  }
+}
+
+.usersTable {
+  font-size: 16px;
+}
+
+#roster {
+  text-decoration: none;
+}
+
+.nounderline {
+  text-decoration: none;
+}
+
+.clubmember {
+  font-weight: normal;
+}

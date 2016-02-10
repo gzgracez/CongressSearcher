@@ -1,0 +1,25 @@
+{
+  "name": "CongressSearcher",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "CongressSearcher"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/gzgracez/CongressSearcher",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.6",
+    "bootstrap-material-design": "~0.5.7",
+    "filepicker-js-bower": "filepicker-js#~2.3.4"
+  }
+}

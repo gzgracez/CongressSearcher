@@ -1,0 +1,31 @@
+[
+  {
+    "id": 0,
+    "userType": "admin",
+    "username": "admin",
+    "password": "admin",
+    "firstName": "Ad",
+    "lastName": "Min1",
+    "email": "admin@email.com",
+    "clubs_member": [
+      1
+    ],
+    "clubs_leader": [
+      0
+    ]
+  },
+  {
+    "id": 4,
+    "userType": "student",
+    "username": "test",
+    "password": "test",
+    "firstName": "Test",
+    "lastName": "IngEDIT",
+    "email": "test@test.com",
+    "clubs_member": [
+      0,
+      1
+    ],
+    "clubs_leader": []
+  }
+]
