@@ -28,6 +28,13 @@ app.get('/', function (req, res) {
     res.render('index', {title: 'Congress Searcher'});
   }
   else if (req.session.user.userType == "admin") {
+    db.all('SELECT * FROM users', function(err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(rows);
+      }
+    });
     var users = fs.readFileSync('data/users.json', 'utf8');
     var userJSON = JSON.parse(users);
     res.render('index', {title: 'Congress Searcher', users: userJSON});
