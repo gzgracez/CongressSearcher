@@ -202,45 +202,6 @@ app.get('/allusers',function(req,res) {
   }
 });
 
-app.get('/roster/:id', function(req,res) {
-  if (!req.session.user) {
-    res.render('notLoggedInAdmin', {title: 'Club Roster'});
-  }
-  else {
-    var clubID = parseInt(req.params.id);
-    var clubs = fs.readFileSync('data/clubs.json', 'utf8');
-    var clubsJSON = JSON.parse(clubs);
-    var users = fs.readFileSync('data/users.json', 'utf8');
-    var userJSON = JSON.parse(users);
-    var members = [];
-    for (var i = 0; i < userJSON.length; i++) {
-      if (userJSON[i]["clubs_member"].indexOf(clubID) > -1) {
-        var tempUser = {
-          "fullname": userJSON[i]["firstName"] + " " + userJSON[i]["lastName"],
-          "username": userJSON[i]["username"],
-          "email": userJSON[i]["email"],
-          "type": "Club Member",
-          "uid": userJSON[i]["id"]
-        }
-        members.push(tempUser);
-      }
-      else if (userJSON[i]["clubs_leader"].indexOf(clubID) > -1) {
-        var tempUser = {
-          "fullname": userJSON[i]["firstName"] + " " + userJSON[i]["lastName"],
-          "username": userJSON[i]["username"],
-          "email": userJSON[i]["email"],
-          "type": "Club Leader",
-          "uid": userJSON[i]["id"]
-        }
-        members.push(tempUser);
-      }
-    }
-    var club = clubsJSON[clubID];
-    req.session.returnTo = req.path;
-    res.render('clubs/roster', {title: club["clubname"] + ' Roster', club: club, members: members});
-  }
-});
-
 app.use(function(req, res) {
     res.status(400);
    res.render('404', {title: '404 File Not Found'});
