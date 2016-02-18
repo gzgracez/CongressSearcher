@@ -6,6 +6,7 @@ var fs = require('fs');
 var path = require('path');
 var path = require('ejs');
 var flash = require('express-flash');
+var sqlite3 = require('sqlite3').verbose();
 
 var app = express();
 app.use(bodyParser.json());
@@ -13,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(session({secret: 'CongressSearcherYay'}));
 app.use(flash());
-var content = fs.readFileSync("static/index.html", 'utf8');
+var db = new sqlite3.Database('congress.db');
 app.use("/static", express.static('static'));
 app.use('/bower_components',  express.static('/bower_components'));
 app.set('view engine', 'ejs');
