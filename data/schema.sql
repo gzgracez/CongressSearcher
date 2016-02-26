@@ -7,7 +7,9 @@ DROP TABLE IF EXISTS userBill;
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT, 
   username TEXT, 
-  password TEXT
+  password TEXT,
+  firstname TEXT,
+  lastname TEXT
 );
 
 CREATE TABLE legislators (

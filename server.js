@@ -27,7 +27,7 @@ app.get('/', function (req, res) {
   if (!req.session.user) {
     res.render('index', {title: 'Congress Searcher'});
   }
-  else if (req.session.user.userType == "admin") {
+  else {
     db.all('SELECT * FROM users', function(err, rows) {
       if (err) {
         console.log(err);
@@ -35,11 +35,7 @@ app.get('/', function (req, res) {
         console.log(rows);
       }
     });
-    var users = fs.readFileSync('data/users.json', 'utf8');
-    var userJSON = JSON.parse(users);
-    res.render('index', {title: 'Congress Searcher', users: userJSON});
-  }
-  else {
+    // res.render('index', {title: 'Congress Searcher', user: names});
     res.render('index', {title: 'Congress Searcher'});
   }
 });
@@ -121,37 +117,26 @@ app.get('/register',function(req,res) {
 
 app.post('/register',function(req,res) {
   var taken = false;
-  var users = fs.readFileSync('data/users.json', 'utf8');
-  var userJSON = JSON.parse(users);
-  for (var i = 0; i < userJSON.length; i++) {
-    if (req.body.rUser.username == userJSON[i]["username"]) {
-      taken = true;
-      req.flash("notification", "Username already taken.");
-      res.redirect('/register');
-      break;
+  db.run("SELECT * FROM users WHERE username='" + req.body.rUser.username + "'",
+    function(err, result) {
+      if (err) { throw err;}
+      else { 
+        console.log(result);
+        if (result != []) {
+          taken = true;
+          req.flash("notification", "Username already taken.");
+          res.redirect('/register');
+        }
+      }
     }
-    else if (req.body.rUser.email == userJSON[i]["email"]) {
-      taken = true;
-      req.flash("notification", "Email already in use.");
-      res.redirect('/register');
-      break;
-    }
-  }
+  );
   if (!taken) {
-    var newUser = {
-      "id": userJSON[userJSON.length - 1].id + 1,
-      "userType": "student",
-      "username": req.body.rUser.username,
-      "password": req.body.rUser.password,
-      "firstName": req.body.rUser.firstName,
-      "lastName": req.body.rUser.lastName,
-      "email": req.body.rUser.email,
-      "clubs_member": [],
-      "clubs_leader": []
-    };
-    userJSON.push(newUser);
-    var jsonString = JSON.stringify(userJSON, null, 2);
-    fs.writeFile("data/users.json", jsonString);
+    db.run("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)",
+      req.body.rUser.username, req.body.rUser.password, req.body.rUser.firstname, req.body.rUser.lastname,
+      function(err) {
+        if (err) { throw err;}
+      }
+    );
     req.flash("notification", "New Account Added");
     res.redirect('/');
   }
