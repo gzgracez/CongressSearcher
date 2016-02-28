@@ -25,13 +25,18 @@ app.use(function(req,res,next){
 
 app.get('/', function (req, res) {
   if (!req.session.user) {
+    db.all('SELECT * FROM users;', function(err, rows) {
+      if (err) { throw err;}
+      else {
+        console.log(rows);
+      }
+    });
     res.render('index', {title: 'Congress Searcher'});
   }
   else {
     db.all('SELECT * FROM users;', function(err, rows) {
-      if (err) {
-        console.log(err);
-      } else {
+      if (err) { throw err;}
+      else {
         console.log(rows);
       }
     });
@@ -117,11 +122,10 @@ app.get('/register',function(req,res) {
 
 app.post('/register',function(req,res) {
   var taken = false;
-  db.run("SELECT * FROM users WHERE username='" + req.body.rUser.username + "';",
+  db.all("SELECT * FROM users WHERE username='" + req.body.rUser.username + "';",
     function(err, result) {
       if (err) { throw err;}
       else { 
-        console.log(result + "testing");
         if (typeof result !== 'undefined') {
           taken = true;
           req.flash("notification", "Username already taken.");
@@ -140,27 +144,39 @@ app.post('/register',function(req,res) {
       }
     }
   );
-  if (!taken) {
-  }
 });
 
 app.post('/login',function(req,res) {
-  var users = fs.readFileSync('data/users.json', 'utf8');
-  var userJSON = JSON.parse(users);
-  for (var i = 0; i < userJSON.length; i++) {
-    if (req.body.lUser.username == userJSON[i]["username"] && req.body.lUser.password == userJSON[i]["password"]) {
-      req.session.user = userJSON[i];
-      req.session.uid = i;
-      break;
+  // var users = fs.readFileSync('data/users.json', 'utf8');
+  // var userJSON = JSON.parse(users);
+  // for (var i = 0; i < userJSON.length; i++) {
+  //   if (req.body.lUser.username == userJSON[i]["username"] && req.body.lUser.password == userJSON[i]["password"]) {
+  //     req.session.user = userJSON[i];
+  //     break;
+  //   }
+  // }
+  db.all("SELECT * FROM users WHERE username='" + req.body.lUser.username + "';",
+    function(err, result) {
+      if (err) { throw err;}
+      else {
+        console.log("SELECT * FROM users WHERE username='" + req.body.lUser.username + "';");
+        console.log(result);
+        if (typeof result !== 'undefined') {
+          req.session.user = {};
+          req.session.user.username = result[0]["username"];
+          req.session.user.password = result[0]["password"];
+          req.session.user.firstname = result[0]["firstname"];
+          req.session.user.lastname = result[0]["lastname"];
+          console.log(req.session.user);
+          req.flash("notification", "Successfully logged in!");
+        }
+        else {
+          req.flash("notification", "Could not log in - username or password was incorrect");
+        }
+        res.redirect('/');
+      }
     }
-  }
-  if (req.session.user) {
-    req.flash("notification", "Successfully logged in!");
-  }
-  else {
-    req.flash("notification", "Could not log in - username or password was incorrect");
-  }
-  res.redirect('/');
+  );
 });
 
 app.get('/logout',function(req,res) {
