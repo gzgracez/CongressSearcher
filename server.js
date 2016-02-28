@@ -28,7 +28,7 @@ app.get('/', function (req, res) {
     res.render('index', {title: 'Congress Searcher'});
   }
   else {
-    db.all('SELECT * FROM users', function(err, rows) {
+    db.all('SELECT * FROM users;', function(err, rows) {
       if (err) {
         console.log(err);
       } else {
@@ -117,28 +117,30 @@ app.get('/register',function(req,res) {
 
 app.post('/register',function(req,res) {
   var taken = false;
-  db.run("SELECT * FROM users WHERE username='" + req.body.rUser.username + "'",
+  db.run("SELECT * FROM users WHERE username='" + req.body.rUser.username + "';",
     function(err, result) {
       if (err) { throw err;}
       else { 
-        console.log(result);
-        if (result != []) {
+        console.log(result + "testing");
+        if (typeof result !== 'undefined') {
           taken = true;
           req.flash("notification", "Username already taken.");
           res.redirect('/register');
+        }
+        else {
+          db.run("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)",
+            req.body.rUser.username, req.body.rUser.password, req.body.rUser.firstName, req.body.rUser.lastName,
+            function(err) {
+              if (err) { throw err;}
+            }
+          );
+          req.flash("notification", "New Account Added");
+          res.redirect('/');
         }
       }
     }
   );
   if (!taken) {
-    db.run("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)",
-      req.body.rUser.username, req.body.rUser.password, req.body.rUser.firstname, req.body.rUser.lastname,
-      function(err) {
-        if (err) { throw err;}
-      }
-    );
-    req.flash("notification", "New Account Added");
-    res.redirect('/');
   }
 });
 
