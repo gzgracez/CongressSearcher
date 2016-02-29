@@ -7,6 +7,7 @@ var path = require('path');
 var path = require('ejs');
 var flash = require('express-flash');
 var sqlite3 = require('sqlite3').verbose();
+var http = require('http');
 
 var app = express();
 app.use(bodyParser.json());
@@ -27,18 +28,12 @@ app.get('/', function (req, res) {
   if (!req.session.user) {
     db.all('SELECT * FROM users;', function(err, rows) {
       if (err) { throw err;}
-      else {
-        console.log(rows);
-      }
     });
     res.render('index', {title: 'Congress Searcher'});
   }
   else {
     db.all('SELECT * FROM users;', function(err, rows) {
       if (err) { throw err;}
-      else {
-        console.log(rows);
-      }
     });
     // res.render('index', {title: 'Congress Searcher', user: names});
     res.render('index', {title: 'Congress Searcher'});
@@ -116,6 +111,43 @@ app.post('/editaccount', function (req, res) {
   }
 });
 
+app.get('/search',function(req,res) {
+  if (req.session.user) {
+    req.session.returnTo = req.path;
+    var options = {
+      hostname: 'congress.api.sunlightfoundation.com'
+      ,port: app.get('port')
+      ,path: '/legislators/locate?zip=11216&apikey=618aca255b0e4f2ea13ad073a3fe3856'
+      ,method: 'GET'
+      ,headers: { 'Content-Type': 'application/json' }
+    };
+    // var req = http.request(options, (res) => {
+    //   console.log(`STATUS: ${res.statusCode}`);
+    //   console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+    //   res.setEncoding('utf8');
+    //   res.on('data', (chunk) => {
+    //     console.log(`BODY: ${chunk}`);
+    //   });
+    //   res.on('end', () => {
+    //     console.log('No more data in response.')
+    //   })
+    // });
+
+    // req.on('error', (e) => {
+    //   console.log(`problem with request: ${e.message}`);
+    // });
+    var req = http.request(options, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (data) {
+           console.log(data);
+      });
+    });
+    res.render('search', {title: 'Search'});
+  }
+  else
+    res.render('notLoggedIn', {title: 'Search'});
+});
+
 app.get('/register',function(req,res) {
   res.render('account/register', {title: 'Register'});
 });
@@ -159,15 +191,12 @@ app.post('/login',function(req,res) {
     function(err, result) {
       if (err) { throw err;}
       else {
-        console.log("SELECT * FROM users WHERE username='" + req.body.lUser.username + "';");
-        console.log(result);
         if (typeof result !== 'undefined') {
           req.session.user = {};
           req.session.user.username = result[0]["username"];
           req.session.user.password = result[0]["password"];
           req.session.user.firstname = result[0]["firstname"];
           req.session.user.lastname = result[0]["lastname"];
-          console.log(req.session.user);
           req.flash("notification", "Successfully logged in!");
         }
         else {
