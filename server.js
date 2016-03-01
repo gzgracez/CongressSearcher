@@ -117,22 +117,21 @@ app.get('/search',function(req,res) {
     var returnedJSON;
     var options = {
       host: 'congress.api.sunlightfoundation.com',
-      path: '/legislators/locate?zip=11216&apikey=618aca255b0e4f2ea13ad073a3fe3856'
+      path: '/legislators/locate?zip=10024&apikey=618aca255b0e4f2ea13ad073a3fe3856'
     };
     callback = function(response) {
-      var res = '';
+      var str = '';
       response.on('data', function (chunk) {
-        res += chunk;
+        str += chunk;
       });
       response.on('end', function () {
-        returnedJSON = JSON.parse(res);
-        console.log(returnedJSON);
+        returnedJSON = JSON.parse(str);
+        console.log(returnedJSON["results"]);
+        res.render('search', {title: 'Search', json: returnedJSON["results"]});
       });
     };
 
     http.request(options, callback).end();
-
-    res.render('search', {title: 'Search'});
   }
   else
     res.render('notLoggedIn', {title: 'Search'});

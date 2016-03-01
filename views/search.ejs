@@ -2,6 +2,10 @@
 
 <h2>Welcome, <%= session.user.firstname%> <%= session.user.lastname%>!</h2>
 
-<p>Search</p>
+<% for (var i = 0; i < json.length; i++) { %>
+
+  <p><%= json[i]["first_name"] + " " + json[i]["last_name"] %></p>
+
+<% } %>
 
 <% include footer %>
