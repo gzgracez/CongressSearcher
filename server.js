@@ -114,34 +114,24 @@ app.post('/editaccount', function (req, res) {
 app.get('/search',function(req,res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
+    var returnedJSON;
     var options = {
-      hostname: 'congress.api.sunlightfoundation.com'
-      ,port: app.get('port')
-      ,path: '/legislators/locate?zip=11216&apikey=618aca255b0e4f2ea13ad073a3fe3856'
-      ,method: 'GET'
-      ,headers: { 'Content-Type': 'application/json' }
+      host: 'congress.api.sunlightfoundation.com',
+      path: '/legislators/locate?zip=11216&apikey=618aca255b0e4f2ea13ad073a3fe3856'
     };
-    // var req = http.request(options, (res) => {
-    //   console.log(`STATUS: ${res.statusCode}`);
-    //   console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-    //   res.setEncoding('utf8');
-    //   res.on('data', (chunk) => {
-    //     console.log(`BODY: ${chunk}`);
-    //   });
-    //   res.on('end', () => {
-    //     console.log('No more data in response.')
-    //   })
-    // });
-
-    // req.on('error', (e) => {
-    //   console.log(`problem with request: ${e.message}`);
-    // });
-    var req = http.request(options, function(res) {
-      res.setEncoding('utf8');
-      res.on('data', function (data) {
-           console.log(data);
+    callback = function(response) {
+      var res = '';
+      response.on('data', function (chunk) {
+        res += chunk;
       });
-    });
+      response.on('end', function () {
+        returnedJSON = JSON.parse(res);
+        console.log(returnedJSON);
+      });
+    };
+
+    http.request(options, callback).end();
+
     res.render('search', {title: 'Search'});
   }
   else
