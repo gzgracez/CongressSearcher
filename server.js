@@ -202,11 +202,12 @@ app.post('/register',function(req,res) {
 });
 
 app.post('/login',function(req,res) {
-  db.all("SELECT * FROM users WHERE username='" + req.body.lUser.username + "';",
-    function(err, result) {
+  var str = "SELECT * FROM users WHERE username=\'" + req.body.lUser.username + "\' AND password=\'" + req.body.lUser.password + "\';";
+  db.all(str, function(err, result) {
       if (err) { throw err;}
       else {
-        if (typeof result !== 'undefined') {
+        console.log(result);
+        if (result.length > 0) {
           req.session.user = {};
           req.session.user.username = result[0]["username"];
           req.session.user.password = result[0]["password"];
