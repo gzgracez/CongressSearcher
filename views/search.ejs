@@ -15,7 +15,13 @@
   <% } else {%>
     <p><strong>Legislators in <%=zipcode%>:</strong></p>
     <% for (var i = 0; i < json.length; i++) { %>
-      <p><%= json[i]["first_name"] + " " + json[i]["last_name"] %></p>
+      <ul>
+        <li><%= json[i]["first_name"] + " " + json[i]["last_name"] %></li>
+          <ul>
+            <li>Twitter: <a href="https://twitter.com/<%= json[i]["twitter_id"] %>" target="_blank"><%= json[i]["twitter_id"] %></a></li>
+            <li>Party: <%= json[i]["party"] %> </li>
+          </ul>
+      </ul>
     <% } %>
   <% } %>
 
