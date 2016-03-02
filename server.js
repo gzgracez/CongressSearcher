@@ -114,7 +114,7 @@ app.post('/editaccount', function (req, res) {
 app.get('/search',function(req,res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
-      res.render('search', {title: 'Search', json: []});
+      res.render('search', {title: 'Search', json: undefined});
   }
   else
     res.render('notLoggedIn', {title: 'Search'});
