@@ -120,6 +120,16 @@ app.get('/search',function(req,res) {
     res.render('notLoggedIn', {title: 'Search'});
 });
 
+app.get('/search/:legis',function(req,res) {
+  // req.params.legis
+  if (req.session.user) {
+    req.session.returnTo = req.path;
+      res.render('search', {title: 'Search', json: undefined});
+  }
+  else
+    res.render('notLoggedIn', {title: 'Search'});
+});
+
 app.post('/search', function (req, res) {
   req.session.returnTo = req.path;
     var returnedJSON;
