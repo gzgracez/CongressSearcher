@@ -1,10 +1,23 @@
 <% include header %>
 
-<h2>Welcome, <%= session.user.firstname%> <%= session.user.lastname%>!</h2>
+<!-- <h2>Welcome, <%= session.user.firstname%> <%= session.user.lastname%>!</h2> -->
 
-<% for (var i = 0; i < json.length; i++) { %>
+<form method="post" action="/search">
+  <label for="number">Zipcode:</label>
+  <input type="number" name="uSearch[zipcode]" value="" placeholder="Zipcode" class="form-control" min="9999" max="100000" required><br>
 
-  <p><%= json[i]["first_name"] + " " + json[i]["last_name"] %></p>
+  <input class="btn btn-primary" class="form-control" type="submit" value="Search"><br><br>
+</form>
+
+<% if (typeof json !== 'undefined') { %>
+  <% if (json.length === 0) { %>
+    <p>No results found.</p>
+  <% } else {%>
+    <p><strong>Legislators in <%=zipcode%>:</strong></p>
+    <% for (var i = 0; i < json.length; i++) { %>
+      <p><%= json[i]["first_name"] + " " + json[i]["last_name"] %></p>
+    <% } %>
+  <% } %>
 
 <% } %>
 

@@ -114,10 +114,18 @@ app.post('/editaccount', function (req, res) {
 app.get('/search',function(req,res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
+      res.render('search', {title: 'Search', json: []});
+  }
+  else
+    res.render('notLoggedIn', {title: 'Search'});
+});
+
+app.post('/search', function (req, res) {
+  req.session.returnTo = req.path;
     var returnedJSON;
     var options = {
       host: 'congress.api.sunlightfoundation.com',
-      path: '/legislators/locate?zip=10024&apikey=618aca255b0e4f2ea13ad073a3fe3856'
+      path: '/legislators/locate?zip=' + req.body.uSearch["zipcode"] + '&apikey=618aca255b0e4f2ea13ad073a3fe3856'
     };
     callback = function(response) {
       var str = '';
@@ -127,14 +135,10 @@ app.get('/search',function(req,res) {
       response.on('end', function () {
         returnedJSON = JSON.parse(str);
         console.log(returnedJSON["results"]);
-        res.render('search', {title: 'Search', json: returnedJSON["results"]});
+        res.render('search', {title: 'Search', json: returnedJSON["results"], zipcode: req.body.uSearch["zipcode"]});
       });
     };
-
     http.request(options, callback).end();
-  }
-  else
-    res.render('notLoggedIn', {title: 'Search'});
 });
 
 app.get('/register',function(req,res) {
@@ -168,14 +172,6 @@ app.post('/register',function(req,res) {
 });
 
 app.post('/login',function(req,res) {
-  // var users = fs.readFileSync('data/users.json', 'utf8');
-  // var userJSON = JSON.parse(users);
-  // for (var i = 0; i < userJSON.length; i++) {
-  //   if (req.body.lUser.username == userJSON[i]["username"] && req.body.lUser.password == userJSON[i]["password"]) {
-  //     req.session.user = userJSON[i];
-  //     break;
-  //   }
-  // }
   db.all("SELECT * FROM users WHERE username='" + req.body.lUser.username + "';",
     function(err, result) {
       if (err) { throw err;}
@@ -221,6 +217,9 @@ app.get('/allusers',function(req,res) {
     res.render('notLoggedInAdmin', {title: 'All Users'});
   }
   else if (req.session.user.userType == "admin") {
+    db.all('SELECT * FROM users;', function(err, rows) {
+      if (err) { throw err;}
+    });
     var users = fs.readFileSync('data/users.json', 'utf8');
     var userJSON = JSON.parse(users);
     res.render('account/allusers', {title: 'All Users', users: userJSON});
