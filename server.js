@@ -114,14 +114,40 @@ app.post('/editaccount', function (req, res) {
 app.get('/search',function(req,res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
+    if (req.session.search != null) {
+      var returnedJSON;
+      var options = {
+        host: 'congress.api.sunlightfoundation.com',
+        path: '/legislators/locate?zip=' + req.session.search + '&apikey=618aca255b0e4f2ea13ad073a3fe3856'
+      };
+      callback = function(response) {
+        var str = '';
+        response.on('data', function (chunk) {
+          str += chunk;
+        });
+        response.on('end', function () {
+          returnedJSON = JSON.parse(str);
+          console.log(returnedJSON["results"]);
+          res.render('search', {title: 'Search', json: returnedJSON["results"], zipcode: parseInt(req.session.search)});
+        });
+      };
+      http.request(options, callback).end();
+    }
+    else {
       res.render('search', {title: 'Search', json: undefined});
+    }
   }
   else
     res.render('notLoggedIn', {title: 'Search'});
 });
 
+app.post('/search', function (req, res) {
+  req.session.returnTo = req.path;
+  req.session.search = req.body.uSearch["zipcode"];
+  res.redirect('/search');
+});
+
 app.get('/search/:id',function(req,res) {
-  // req.params.legis
   if (req.session.user) {
     req.session.returnTo = req.path;
     var options = {
@@ -143,27 +169,6 @@ app.get('/search/:id',function(req,res) {
   }
   else
     res.render('notLoggedIn', {title: 'Legislator Info'});
-});
-
-app.post('/search', function (req, res) {
-  req.session.returnTo = req.path;
-    var returnedJSON;
-    var options = {
-      host: 'congress.api.sunlightfoundation.com',
-      path: '/legislators/locate?zip=' + req.body.uSearch["zipcode"] + '&apikey=618aca255b0e4f2ea13ad073a3fe3856'
-    };
-    callback = function(response) {
-      var str = '';
-      response.on('data', function (chunk) {
-        str += chunk;
-      });
-      response.on('end', function () {
-        returnedJSON = JSON.parse(str);
-        console.log(returnedJSON["results"]);
-        res.render('search', {title: 'Search', json: returnedJSON["results"], zipcode: req.body.uSearch["zipcode"]});
-      });
-    };
-    http.request(options, callback).end();
 });
 
 app.get('/register',function(req,res) {

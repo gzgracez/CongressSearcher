@@ -3,8 +3,8 @@
 <!-- <h2>Welcome, <%= session.user.firstname%> <%= session.user.lastname%>!</h2> -->
 
 <form method="post" action="/search">
-  <label for="number">Zipcode:</label>
-  <input type="number" name="uSearch[zipcode]" value="" placeholder="Zipcode" class="form-control" min="9999" max="100000" required><br>
+  <label for="number">ZIP Code:</label>
+  <input type="number" name="uSearch[zipcode]" value="<%= session.search %>" placeholder="Zipcode" class="form-control" min="9999" max="100000" required><br>
 
   <input class="btn btn-primary" class="form-control" type="submit" value="Search"><br><br>
 </form>
