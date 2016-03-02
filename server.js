@@ -120,14 +120,29 @@ app.get('/search',function(req,res) {
     res.render('notLoggedIn', {title: 'Search'});
 });
 
-app.get('/search/:legis',function(req,res) {
+app.get('/search/:id',function(req,res) {
   // req.params.legis
   if (req.session.user) {
     req.session.returnTo = req.path;
-      res.render('search', {title: 'Search', json: undefined});
+    var options = {
+      host: 'congress.api.sunlightfoundation.com',
+      path: '/bills/search?apikey=618aca255b0e4f2ea13ad073a3fe3856&sponsor_id=' + req.params.id
+    };
+    callback = function(response) {
+      var str = '';
+      response.on('data', function (chunk) {
+        str += chunk;
+      });
+      response.on('end', function () {
+        returnedJSON = JSON.parse(str);
+        console.log(returnedJSON["results"]);
+        res.render('legislatorInfo', {title: returnedJSON["results"][0]["sponsor"]["first_name"] + " " + returnedJSON["results"][0]["sponsor"]["last_name"] + "'s Bills", json: returnedJSON["results"]});
+      });
+    };
+    http.request(options, callback).end();
   }
   else
-    res.render('notLoggedIn', {title: 'Search'});
+    res.render('notLoggedIn', {title: 'Legislator Info'});
 });
 
 app.post('/search', function (req, res) {

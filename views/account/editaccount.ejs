@@ -7,8 +7,6 @@
 <% } %>
 
 <form method="post" action="/editaccount">
-  <label for="email">Email:</label>
-  <input type="email" name="eUser[email]" value="<%= session.user.email %>" placeholder="Email" class="form-control" required><br>
 
   <label for="firstName">First Name:</label>
   <input type="text" name="eUser[firstName]" value="<%= session.user.firstname %>" placeholder="FirstName" class="form-control" required><br>

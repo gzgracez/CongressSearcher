@@ -1,0 +1,20 @@
+<% include header %>
+
+<% if (typeof json !== 'undefined') { %>
+  <% if (json.length === 0) { %>
+    <p>No bills found.</p>
+  <% } else {%>
+    <% for (var i = 0; i < json.length; i++) { %>
+      <ul>
+        <% if (json[i]["short_title"] != null) { %>
+          <li><strong><a href="<%= json[i]["urls"]["congress"] %>" target="_blank"><%= json[i]["short_title"] %></a></strong>: <%= json[i]["official_title"] %></li>
+        <% } else {%>
+          <li><strong><a href="<%= json[i]["urls"]["congress"] %>" target="_blank"><%= json[i]["official_title"] %></a></strong></li>
+        <% } %>
+      </ul>
+    <% } %>
+    <% } %>
+
+<% } %>
+
+<% include footer %>
