@@ -18,4 +18,16 @@
   <% } %>
 <% } %>
 
+<% if (bills.length === 0) { %>
+  <p>No saved bills found.</p>
+<% } else {%>
+  <p><strong>Saved legislators:</strong></p>
+  <% for (var i = 0; i < bills.length; i++) { %>
+    <ul>
+      <li><%= bills[i]["name"] %>
+      </li>
+    </ul>
+  <% } %>
+<% } %>
+
 <% include footer %>

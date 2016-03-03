@@ -44,11 +44,18 @@ app.get('/dashboard', function (req, res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
     var returnedJSON;
-    var str = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + ";";
-    db.all(str, function(err, result) {
+    var str1 = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + ";";
+    var str2 = "SELECT * FROM userBills WHERE idUser=" + req.session.user.uid + ";";
+    db.all(str1, function(err, result) {
           if (err) { throw err;}
           else { 
-          res.render('dashboard', {title: 'My Dashboard', json: result});
+            db.all(str2, function(err, result2) {
+                if (err) { throw err;}
+                else { 
+                res.render('dashboard', {title: 'My Dashboard', json: result, bills: result2});
+                }
+              }
+            );
           }
         }
       );
