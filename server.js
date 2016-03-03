@@ -181,7 +181,6 @@ app.get('/search/:id',function(req,res) {
 
 app.post('/saveleg/:id/:first/:last',function(req,res) {
   if (req.session.user) {
-    req.session.returnTo = req.path;
     var str = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + " AND idLeg='" + req.params.id + "';";
     db.all(str, function(err, result) {
           if (err) { throw err;}
@@ -207,6 +206,35 @@ app.post('/saveleg/:id/:first/:last',function(req,res) {
   }
   else
     res.render('notLoggedIn', {title: 'Save Legislator'});
+});
+
+app.post('/savebill/:id/:official',function(req,res) {
+  if (req.session.user) {
+    var str = "SELECT * FROM userBills WHERE idUser=" + req.session.user.uid + " AND idBill='" + req.params.id + "';";
+    db.all(str, function(err, result) {
+          if (err) { throw err;}
+          else { 
+            if (result.length > 0) {
+              req.flash("notification", "Bill already saved");
+              res.redirect('/search');
+            }
+            else {
+              var name = req.params.official;
+              db.run("INSERT INTO userBills (idUser, idBill, name) VALUES (?, ?, ?)",
+                req.session.user.uid, req.params.id, name,
+                function(err) {
+                  if (err) { throw err;}
+                }
+              );
+              req.flash("notification", "New Bill Saved");
+              res.redirect(req.session.returnTo);
+            }
+          }
+        }
+      );
+  }
+  else
+    res.render('notLoggedIn', {title: 'Save Bill'});
 });
 
 app.get('/register',function(req,res) {
