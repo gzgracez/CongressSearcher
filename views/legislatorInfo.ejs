@@ -7,9 +7,19 @@
     <% for (var i = 0; i < json.length; i++) { %>
       <ul>
         <% if (json[i]["short_title"] != null) { %>
-          <li><strong><a href="<%= json[i]["urls"]["congress"] %>" target="_blank"><%= json[i]["short_title"] %></a></strong>: <%= json[i]["official_title"] %></li>
+          <li>
+            <strong><a href="<%= json[i]["urls"]["congress"] %>" target="_blank"><%= json[i]["short_title"] %></a></strong>: <%= json[i]["official_title"] %>
+            <form method="post" action="/savebill/<%= json[i]["bill_id"] %>">
+              <input class="btn btn-primary" class="form-control" type="submit" value="Save Bill">
+            </form>
+          </li>
         <% } else {%>
-          <li><strong><a href="<%= json[i]["urls"]["congress"] %>" target="_blank"><%= json[i]["official_title"] %></a></strong></li>
+          <li>
+            <strong><a href="<%= json[i]["urls"]["congress"] %>" target="_blank"><%= json[i]["official_title"] %></a></strong>
+            <form method="post" action="/savebill/<%= json[i]["bill_id"] %>">
+              <input class="btn btn-primary" class="form-control" type="submit" value="Save Bill">
+            </form>
+          </li>
         <% } %>
       </ul>
     <% } %>

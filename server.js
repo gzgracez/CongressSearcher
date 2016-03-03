@@ -206,7 +206,6 @@ app.post('/login',function(req,res) {
   db.all(str, function(err, result) {
       if (err) { throw err;}
       else {
-        console.log(result);
         if (result.length > 0) {
           req.session.user = {};
           req.session.user.username = result[0]["username"];

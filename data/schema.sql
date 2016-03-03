@@ -35,3 +35,15 @@ CREATE TABLE userBill (
   FOREIGN KEY(idUser) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY(idBill) REFERENCES bill(id) ON DELETE CASCADE
 );
+
+CREATE TABLE userLegs (
+  idUser INTEGER, 
+  idLeg TEXT,
+  FOREIGN KEY(idUser) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE userBills (
+  idUser INTEGER, 
+  idBill TEXT,
+  FOREIGN KEY(idUser) REFERENCES users(id) ON DELETE CASCADE
+);
