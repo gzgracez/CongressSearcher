@@ -22,8 +22,13 @@
           </form>
         </li>
           <ul>
-            <li>Twitter: <a href="https://twitter.com/<%= json[i]["twitter_id"] %>" target="_blank"><%= json[i]["twitter_id"] %></a></li>
-            <li>Party: <%= json[i]["party"] %> </li>
+            <% if (json[i]["party"] == "D") { %>
+              <li style="color: blue">Twitter: <a href="https://twitter.com/<%= json[i]["twitter_id"] %>" target="_blank" style="color: blue"><%= json[i]["twitter_id"] %></a></li>
+              <li style="color: blue">Party: <%= json[i]["party"] %> </li>
+            <% } else {%>
+              <li style="color: red">Twitter: <a href="https://twitter.com/<%= json[i]["twitter_id"] %>" target="_blank" style="color: red"><%= json[i]["twitter_id"] %></a></li>
+              <li style="color: red">Party: <%= json[i]["party"] %> </li>
+            <% } %>
           </ul>
       </ul>
     <% } %>
