@@ -17,7 +17,7 @@
     <% for (var i = 0; i < json.length; i++) { %>
       <ul>
         <li><a href="/search/<%= json[i]["bioguide_id"] %>"><%= json[i]["first_name"] + " " + json[i]["last_name"] %></a>
-          <form method="post" action="/saveleg/<%= json[i]["bioguide_id"] %>">
+          <form method="post" action="/saveleg/<%= json[i]["bioguide_id"] %>/<%= json[i]["first_name"] %>/<%= json[i]["last_name"] %>">
             <input class="btn btn-primary" class="form-control" type="submit" value="Save Legislator">
           </form>
         </li>
@@ -28,7 +28,6 @@
       </ul>
     <% } %>
   <% } %>
-
 <% } %>
 
 <% include footer %>

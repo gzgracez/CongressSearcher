@@ -2,11 +2,20 @@
 
 <h2>Welcome, <%= session.user.firstname%> <%= session.user.lastname%>!</h2>
 
-<p>Dashboard info - legislators and bills you are following</p>
-<ul>
-  <li>Legislators table with IDs</li>
-  <li>Bills table with IDs</li>
-  <li>Users table with legislator and bill IDs</li>
-</ul>
+<% if (json.length === 0) { %>
+  <p>No saved legislators found.</p>
+<% } else {%>
+  <p><strong>Saved legislators:</strong></p>
+  <% for (var i = 0; i < json.length; i++) { %>
+    <ul>
+      <li><a href="/search/<%= json[i]["idLeg"] %>"><%= json[i]["name"] %></a>
+      </li>
+        <!-- <ul>
+          <li>Twitter: <a href="https://twitter.com/<%= json[i]["twitter_id"] %>" target="_blank"><%= json[i]["twitter_id"] %></a></li>
+          <li>Party: <%= json[i]["party"] %> </li>
+        </ul> -->
+    </ul>
+  <% } %>
+<% } %>
 
 <% include footer %>

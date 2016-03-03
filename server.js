@@ -43,7 +43,15 @@ app.get('/', function (req, res) {
 app.get('/dashboard', function (req, res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
-    res.render('dashboard', {title: 'My Dashboard'});
+    var returnedJSON;
+    var str = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + ";";
+    db.all(str, function(err, result) {
+          if (err) { throw err;}
+          else { 
+          res.render('dashboard', {title: 'My Dashboard', json: result});
+          }
+        }
+      );
   }
   else
     res.render('notLoggedIn', {title: 'My Dashboard'});
@@ -171,35 +179,35 @@ app.get('/search/:id',function(req,res) {
     res.render('notLoggedIn', {title: 'Legislator Info'});
 });
 
-app.get('/saveleg/:id',function(req,res) {
+app.post('/saveleg/:id/:first/:last',function(req,res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
-    var str = "SELECT * FROM userLegs WHERE idUser='" + req.session.uid + "' AND idLeg='" + req.params.id + "';";
+    var str = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + " AND idLeg='" + req.params.id + "';";
     db.all(str, function(err, result) {
           if (err) { throw err;}
           else { 
-            if (typeof result == []) {
-              req.flash("notification", "Username already taken.");
-              res.redirect('/register');
+            if (result.length > 0) {
+              req.flash("notification", "Legislator already saved");
+              res.redirect('/search');
             }
             else {
-              db.run("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)",
-                req.body.rUser.username, req.body.rUser.password, req.body.rUser.firstName, req.body.rUser.lastName,
+              var name = req.params.first + " " + req.params.last;
+              db.run("INSERT INTO userLegs (idUser, idLeg, name) VALUES (?, ?, ?)",
+                req.session.user.uid, req.params.id, name,
                 function(err) {
                   if (err) { throw err;}
                 }
               );
-              req.flash("notification", "New Account Added");
-              res.redirect('/');
+              req.flash("notification", "New Legislator Saved");
+              res.redirect('/search');
             }
           }
         }
       );
   }
   else
-    res.render('notLoggedIn', {title: 'Legislator Info'});
+    res.render('notLoggedIn', {title: 'Save Legislator'});
 });
-
 
 app.get('/register',function(req,res) {
   res.render('account/register', {title: 'Register'});

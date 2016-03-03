@@ -39,11 +39,13 @@ CREATE TABLE userBill (
 CREATE TABLE userLegs (
   idUser INTEGER, 
   idLeg TEXT,
+  name TEXT,
   FOREIGN KEY(idUser) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE userBills (
   idUser INTEGER, 
   idBill TEXT,
+  name TEXT,
   FOREIGN KEY(idUser) REFERENCES users(id) ON DELETE CASCADE
 );
