@@ -171,6 +171,36 @@ app.get('/search/:id',function(req,res) {
     res.render('notLoggedIn', {title: 'Legislator Info'});
 });
 
+app.get('/saveleg/:id',function(req,res) {
+  if (req.session.user) {
+    req.session.returnTo = req.path;
+    var str = "SELECT * FROM userLegs WHERE idUser='" + req.session.uid + "' AND idLeg='" + req.params.id + "';";
+    db.all(str, function(err, result) {
+          if (err) { throw err;}
+          else { 
+            if (typeof result == []) {
+              req.flash("notification", "Username already taken.");
+              res.redirect('/register');
+            }
+            else {
+              db.run("INSERT INTO users (username, password, firstname, lastname) VALUES (?, ?, ?, ?)",
+                req.body.rUser.username, req.body.rUser.password, req.body.rUser.firstName, req.body.rUser.lastName,
+                function(err) {
+                  if (err) { throw err;}
+                }
+              );
+              req.flash("notification", "New Account Added");
+              res.redirect('/');
+            }
+          }
+        }
+      );
+  }
+  else
+    res.render('notLoggedIn', {title: 'Legislator Info'});
+});
+
+
 app.get('/register',function(req,res) {
   res.render('account/register', {title: 'Register'});
 });
@@ -181,7 +211,8 @@ app.post('/register',function(req,res) {
     function(err, result) {
       if (err) { throw err;}
       else { 
-        if (typeof result !== 'undefined') {
+        console.log(result);
+        if (result.length > 0) {
           taken = true;
           req.flash("notification", "Username already taken.");
           res.redirect('/register');
@@ -208,6 +239,7 @@ app.post('/login',function(req,res) {
       else {
         if (result.length > 0) {
           req.session.user = {};
+          req.session.user.uid = result[0]["id"];
           req.session.user.username = result[0]["username"];
           req.session.user.password = result[0]["password"];
           req.session.user.firstname = result[0]["firstname"];
