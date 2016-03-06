@@ -133,7 +133,7 @@ app.get('/search',function(req,res) {
       var returnedJSON;
       var options = {
         host: 'congress.api.sunlightfoundation.com',
-        path: '/legislators/locate?zip=' + req.session.search + '&apikey=618aca255b0e4f2ea13ad073a3fe3856'
+        path: '/legislators/locate?apikey=618aca255b0e4f2ea13ad073a3fe3856&zip=' + req.session.search
       };
       callback = function(response) {
         var str = '';
