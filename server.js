@@ -90,40 +90,70 @@ app.get('/editaccount', function (req, res) {
 });
 
 app.post('/editaccount', function (req, res) {
-  var i = req.session.uid;
-  var users = fs.readFileSync('data/users.json', 'utf8');
-  var userJSON = JSON.parse(users);
-  var taken = false;
-  for (var j = 0; j < userJSON.length; j++) {
-    if (req.body.eUser.username == userJSON[j]["username"]) {
-      if (!(userJSON[j]["username"] == userJSON[i]["username"])) {
-        taken = true;
-        req.flash("notification", "Username already taken.");
-        res.redirect('/editaccount');
-        break;
+  var i = req.session.user.uid;
+  db.all("SELECT * FROM users WHERE username='" + req.body.eUser.username + "';",
+    function(err, result) {
+      if (err) { throw err;}
+      else { 
+        console.log(result);
+        if (result.length > 0 && result[0].username != req.session.user.username) {
+          req.flash("notification", "Username already taken.");
+          res.redirect('/editaccount');
+        }
+        else {
+          var str = "UPDATE users SET username=?, password=?, firstname=?, lastname=? WHERE id=" + i;
+          db.run(str,
+            req.body.eUser.username, req.body.eUser.password, req.body.eUser.firstName, req.body.eUser.lastName,
+            function(err) {
+              if (err) { throw err;}
+              else {
+                req.session.user.uid = result[0]["id"];
+                req.session.user.username = req.body.eUser.username;
+                req.session.user.password = req.body.eUser.password;
+                req.session.user.firstname = req.body.eUser.firstName;
+                req.session.user.lastname = req.body.eUser.lastName;
+                req.flash("notification", "Account Information Edited!");
+                res.redirect('/');
+              }
+            }
+          );
+        }
       }
     }
-    else if (req.body.eUser.email == userJSON[j]["email"]) {
-      if (!(userJSON[j]["email"] == userJSON[i]["email"])) {
-        taken = true;
-        req.flash("notification", "Email already in use.");
-        res.redirect('/editaccount');
-        break;
-      }
-    }
-  }
-  if (!taken) {
-    userJSON[i]["firstName"] = req.body.eUser.firstName;
-    userJSON[i]["lastName"] = req.body.eUser.lastName;
-    userJSON[i]["email"] = req.body.eUser.email;
-    userJSON[i]["username"] = req.body.eUser.username;
-    userJSON[i]["password"] = req.body.eUser.password;
-    req.session.user = userJSON[i];
-    var jsonString = JSON.stringify(userJSON, null, 2);
-    fs.writeFile("data/users.json", jsonString);
-    req.flash("notification", "Account Information Edited!");
-    res.redirect('/');
-  }
+  );
+  // var users = fs.readFileSync('data/users.json', 'utf8');
+  // var userJSON = JSON.parse(users);
+  // var taken = false;
+  // for (var j = 0; j < userJSON.length; j++) {
+  //   if (req.body.eUser.username == userJSON[j]["username"]) {
+  //     if (!(userJSON[j]["username"] == userJSON[i]["username"])) {
+  //       taken = true;
+  //       req.flash("notification", "Username already taken.");
+  //       res.redirect('/editaccount');
+  //       break;
+  //     }
+  //   }
+  //   else if (req.body.eUser.email == userJSON[j]["email"]) {
+  //     if (!(userJSON[j]["email"] == userJSON[i]["email"])) {
+  //       taken = true;
+  //       req.flash("notification", "Email already in use.");
+  //       res.redirect('/editaccount');
+  //       break;
+  //     }
+  //   }
+  // }
+  // if (!taken) {
+  //   userJSON[i]["firstName"] = req.body.eUser.firstName;
+  //   userJSON[i]["lastName"] = req.body.eUser.lastName;
+  //   userJSON[i]["email"] = req.body.eUser.email;
+  //   userJSON[i]["username"] = req.body.eUser.username;
+  //   userJSON[i]["password"] = req.body.eUser.password;
+  //   req.session.user = userJSON[i];
+  //   var jsonString = JSON.stringify(userJSON, null, 2);
+  //   fs.writeFile("data/users.json", jsonString);
+  //   req.flash("notification", "Account Information Edited!");
+  //   res.redirect('/');
+  // }
 });
 
 app.get('/search',function(req,res) {
@@ -249,14 +279,12 @@ app.get('/register',function(req,res) {
 });
 
 app.post('/register',function(req,res) {
-  var taken = false;
   db.all("SELECT * FROM users WHERE username='" + req.body.rUser.username + "';",
     function(err, result) {
       if (err) { throw err;}
       else { 
         console.log(result);
         if (result.length > 0) {
-          taken = true;
           req.flash("notification", "Username already taken.");
           res.redirect('/register');
         }
