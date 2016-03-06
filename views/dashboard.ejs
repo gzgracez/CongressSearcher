@@ -6,28 +6,53 @@
   <p>No saved legislators found.</p>
 <% } else {%>
   <p><strong>Saved legislators:</strong></p>
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Legislator</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+  <tbody>
   <% for (var i = 0; i < json.length; i++) { %>
-    <ul>
-      <li><a href="/search/<%= json[i]["idLeg"] %>"><%= json[i]["name"] %></a>
-      </li>
-        <!-- <ul>
-          <li>Twitter: <a href="https://twitter.com/<%= json[i]["twitter_id"] %>" target="_blank"><%= json[i]["twitter_id"] %></a></li>
-          <li>Party: <%= json[i]["party"] %> </li>
-        </ul> -->
-    </ul>
+      <tr>
+      <td><a href="/search/<%= json[i]["idLeg"] %>"><%= json[i]["name"] %></a></td>
+      <td>
+        <form method="post" action="/removelegislator/<%= json[i]["idLeg"] %>">
+          <input class="btn btn-danger" class="form-control" type="submit" value="Remove">
+        </form>
+      </td>
+      </tr>
   <% } %>
+    </tbody>
+</table>
 <% } %>
 
 <% if (bills.length === 0) { %>
   <p>No saved bills found.</p>
 <% } else {%>
   <p><strong>Saved bills:</strong></p>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Legislator</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+  <tbody>
   <% for (var i = 0; i < bills.length; i++) { %>
-    <ul>
-      <li><%= bills[i]["name"] %>
-      </li>
-    </ul>
+    <tr>
+      <td><%= bills[i]["name"] %></td>
+      <td>
+        <form method="post" action="/removebill/<%= bills[i]["id"] %>">
+          <input class="btn btn-danger" class="form-control" type="submit" value="Remove">
+        </form>
+      </td>
+    </tr>
   <% } %>
+    </tbody>
+</table>
 <% } %>
 
 <% include footer %>

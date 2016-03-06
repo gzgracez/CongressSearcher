@@ -121,39 +121,6 @@ app.post('/editaccount', function (req, res) {
       }
     }
   );
-  // var users = fs.readFileSync('data/users.json', 'utf8');
-  // var userJSON = JSON.parse(users);
-  // var taken = false;
-  // for (var j = 0; j < userJSON.length; j++) {
-  //   if (req.body.eUser.username == userJSON[j]["username"]) {
-  //     if (!(userJSON[j]["username"] == userJSON[i]["username"])) {
-  //       taken = true;
-  //       req.flash("notification", "Username already taken.");
-  //       res.redirect('/editaccount');
-  //       break;
-  //     }
-  //   }
-  //   else if (req.body.eUser.email == userJSON[j]["email"]) {
-  //     if (!(userJSON[j]["email"] == userJSON[i]["email"])) {
-  //       taken = true;
-  //       req.flash("notification", "Email already in use.");
-  //       res.redirect('/editaccount');
-  //       break;
-  //     }
-  //   }
-  // }
-  // if (!taken) {
-  //   userJSON[i]["firstName"] = req.body.eUser.firstName;
-  //   userJSON[i]["lastName"] = req.body.eUser.lastName;
-  //   userJSON[i]["email"] = req.body.eUser.email;
-  //   userJSON[i]["username"] = req.body.eUser.username;
-  //   userJSON[i]["password"] = req.body.eUser.password;
-  //   req.session.user = userJSON[i];
-  //   var jsonString = JSON.stringify(userJSON, null, 2);
-  //   fs.writeFile("data/users.json", jsonString);
-  //   req.flash("notification", "Account Information Edited!");
-  //   res.redirect('/');
-  // }
 });
 
 app.get('/search',function(req,res) {
@@ -272,6 +239,33 @@ app.post('/savebill/:id/:official',function(req,res) {
   }
   else
     res.render('notLoggedIn', {title: 'Save Bill'});
+});
+
+app.post('/removelegislator/:id',function(req,res) {
+  if (req.session.user) {
+    var str = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + " AND idLeg='" + req.params.id + "';";
+    db.all(str, function(err, result) {
+          if (err) { throw err;}
+          else { 
+            if (result.length > 0) {
+              var str = "DELETE FROM userLegs WHERE idLeg='" + req.params.id + "'";
+              db.run(str, function(err) {
+                  if (err) { throw err;}
+                }
+              );
+              req.flash("notification", "Legislator Removed!");
+              res.redirect('/dashboard');
+            }
+            else {
+              req.flash("notification", "Legislator Not Found");
+              res.redirect('/dashboard');
+            }
+          }
+        }
+      );
+  }
+  else
+    res.render('notLoggedIn', {title: 'Remove Legislator'});
 });
 
 app.get('/register',function(req,res) {
