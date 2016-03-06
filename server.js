@@ -268,6 +268,33 @@ app.post('/removelegislator/:id',function(req,res) {
     res.render('notLoggedIn', {title: 'Remove Legislator'});
 });
 
+app.post('/removebill/:id',function(req,res) {
+  if (req.session.user) {
+    var str = "SELECT * FROM userBills WHERE idUser=" + req.session.user.uid + " AND idBill='" + req.params.id + "';";
+    db.all(str, function(err, result) {
+          if (err) { throw err;}
+          else { 
+            if (result.length > 0) {
+              var str = "DELETE FROM userBills WHERE idBill='" + req.params.id + "'";
+              db.run(str, function(err) {
+                  if (err) { throw err;}
+                }
+              );
+              req.flash("notification", "Bill Removed!");
+              res.redirect('/dashboard');
+            }
+            else {
+              req.flash("notification", "Bill Not Found");
+              res.redirect('/dashboard');
+            }
+          }
+        }
+      );
+  }
+  else
+    res.render('notLoggedIn', {title: 'Remove Legislator'});
+});
+
 app.get('/register',function(req,res) {
   res.render('account/register', {title: 'Register'});
 });

@@ -3,7 +3,7 @@
 <h2>Welcome, <%= session.user.firstname%> <%= session.user.lastname%>!</h2>
 
 <% if (json.length === 0) { %>
-  <p>No saved legislators found.</p>
+  <p><strong>No saved legislators found.</strong></p>
 <% } else {%>
   <p><strong>Saved legislators:</strong></p>
 
@@ -30,7 +30,7 @@
 <% } %>
 
 <% if (bills.length === 0) { %>
-  <p>No saved bills found.</p>
+  <p><strong>No saved bills found.</strong></p>
 <% } else {%>
   <p><strong>Saved bills:</strong></p>
 <table class="table table-striped table-hover">
@@ -45,7 +45,7 @@
     <tr>
       <td><%= bills[i]["name"] %></td>
       <td>
-        <form method="post" action="/removebill/<%= bills[i]["id"] %>">
+        <form method="post" action="/removebill/<%= bills[i]["idBill"] %>">
           <input class="btn btn-danger" class="form-control" type="submit" value="Remove">
         </form>
       </td>
