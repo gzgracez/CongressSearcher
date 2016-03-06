@@ -5,24 +5,16 @@
     <tr>
       <th>Name</th>
       <th>Username</th>
-      <th>Email</th>
-      <th>Status</th>
     </tr>
   </thead>
   <tbody>
     <% for(var i = 0; i < users.length; i++) {%>
       <tr>
           <td>
-            <%= users[i]["firstName"] %> <%= users[i]["lastName"] %>
+            <%= users[i]["firstname"] %> <%= users[i]["lastname"] %>
           </td>
           <td>
             <%= users[i]["username"] %>
-          </td>
-          <td>
-            <a href="mailto:<%= users[i]["email"] %>" class='usersTable'><%= users[i]["email"] %></a>
-          </td>
-          <td>
-            <%= users[i]["userType"] %>
           </td>
       </tr>
     <% } %>

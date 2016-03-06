@@ -26,16 +26,9 @@ app.use(function(req,res,next){
 
 app.get('/', function (req, res) {
   if (!req.session.user) {
-    db.all('SELECT * FROM users;', function(err, rows) {
-      if (err) { throw err;}
-    });
     res.render('index', {title: 'Congress Searcher'});
   }
   else {
-    db.all('SELECT * FROM users;', function(err, rows) {
-      if (err) { throw err;}
-    });
-    // res.render('index', {title: 'Congress Searcher', user: names});
     res.render('index', {title: 'Congress Searcher'});
   }
 });
@@ -44,8 +37,8 @@ app.get('/dashboard', function (req, res) {
   if (req.session.user) {
     req.session.returnTo = req.path;
     var returnedJSON;
-    var str1 = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + ";";
-    var str2 = "SELECT * FROM userBills WHERE idUser=" + req.session.user.uid + ";";
+    var str1 = "SELECT * FROM userLegs WHERE idUser=" + req.session.user.uid + " ORDER BY name ASC;";
+    var str2 = "SELECT * FROM userBills WHERE idUser=" + req.session.user.uid + " ORDER BY name ASC;";
     db.all(str1, function(err, result) {
           if (err) { throw err;}
           else { 
@@ -370,16 +363,27 @@ app.get('/allusers',function(req,res) {
   if (!req.session.user) {
     res.render('notLoggedInAdmin', {title: 'All Users'});
   }
-  else if (req.session.user.userType == "admin") {
+  else {
     db.all('SELECT * FROM users;', function(err, rows) {
       if (err) { throw err;}
+      else {
+        res.render('account/allusers', {title: 'All Users', users: rows});
+      }
     });
-    var users = fs.readFileSync('data/users.json', 'utf8');
-    var userJSON = JSON.parse(users);
-    res.render('account/allusers', {title: 'All Users', users: userJSON});
+  }
+});
+
+app.get('/ausers',function(req,res) {
+  if (!req.session.user) {
+    res.render('notLoggedInAdmin', {title: 'All Users'});
   }
   else {
-    res.render('notLoggedInAdmin', {title: 'All Users'});
+    db.all('SELECT * FROM users;', function(err, rows) {
+      if (err) { throw err;}
+      else {
+        res.send(rows);
+      }
+    });
   }
 });
 
